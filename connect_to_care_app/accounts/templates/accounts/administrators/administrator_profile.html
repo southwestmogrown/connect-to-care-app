@@ -8,12 +8,21 @@
 </head>
 <body>
     {% if user.has_credentials %}
+    {% if user.administrator.facility_enrolled %}
     <h1>Administrator Profile Page</h1>
+    {% else %}
+    <h1>Facility enrollment needed</h1>
+    {% endif %}
     <div>
         <p><a href="{% url 'logout' %}">Log Out</a></p>
     </div>
     {% else %}
-    <div>Need Credentials</div>
+    <h1>Thanks for signing up!</h1><br>
+    <h2>We have just a few more questions before you can begin posting shifts.</h2><br>
+    <p>This may take a few minutes, click <a href="{% url 'administrators:admin_credentials' %}">here</a></p>
+    <p><a href="{% url 'logout' %}">Log Out</a></p>
     {% endif %}
+    <div>
+    </div>
 </body>
 </html>
