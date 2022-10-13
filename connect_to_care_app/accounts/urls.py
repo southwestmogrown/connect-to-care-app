@@ -12,6 +12,8 @@ urlpatterns = [
     path('administrators/', include(([
         path('', facility_admin.admin_credentials, name='admin_credential_post'),
         path('<int:pk>/', facility_admin.AdministratorProfileView.as_view(), name='administrator_profile'),
-        path('admin_credentials/', facility_admin.AdministratorCredentialsView.as_view(), name='admin_credentials' )
+        path('admin_credentials/', facility_admin.AdministratorCredentialsView.as_view(), name='admin_credentials' ),
+        path('facility/', facility_admin.AdministratorFacilityFormView.as_view(), name='facility' ),
+        path('facilities/', facility_admin.facility_create, name='facility_create'),
     ], 'accounts'), namespace='administrators'))
 ]

@@ -8,8 +8,8 @@ from django.views.generic import CreateView, TemplateView
 
 
 from ..decorators import administrator_required, seeker_required
-from ..forms import AdministratorSignUpForm, AdministratorCredentialsForm
-from ..models import Administrator, User
+from ..forms import AdministratorSignUpForm, AdministratorCredentialsForm, FacilityForm
+from ..models import Administrator, User, Facility
 
 class AdministratorSignUpView(CreateView):
     model = User
@@ -44,9 +44,23 @@ class AdministratorCredentialsView(CreateView):
         print('here')
         return redirect('home')
 
+@method_decorator([login_required, administrator_required], name='dispatch')
+class AdministratorFacilityFormView(CreateView):
+    model: Facility
+    form_class = FacilityForm
+    template_name = 'accounts/administrators/facility.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['user_type'] = 'administrator'
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        user = form.save()
+        print('here')
+        return redirect('home')
+
+@administrator_required
 def admin_credentials(request):
-    
-    
     if request.method == 'POST':
         full_name = request.POST['full_name']
         title = request.POST['title']
@@ -57,5 +71,20 @@ def admin_credentials(request):
         new_admin = Administrator.objects.create(user_id=uid, full_name=full_name, title=title, position=position, address=address, phone_number=phone_number)
         user = get_object_or_404(User, pk=uid)
         user.has_credentials = True
+        user.save()
+        return redirect('home')
+        
+@administrator_required
+def facility_create(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        website_url = request.POST['website_url']
+        taxID = request.POST['taxID']
+
+        uid = request.user.get_id()
+        user = get_object_or_404(Administrator, user_id=uid)
+        print(user)
+        new_facility = Facility.objects.create(admin_id=uid, name=name, website_url=website_url, taxID=taxID)
+        user.facility_enrolled = True
         user.save()
         return redirect('home')

@@ -20,7 +20,7 @@ class SeekerSignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('seekers:jobs_listings')
+        return redirect('home')
 
 @method_decorator([login_required, seeker_required], name='dispatch')
 class SeekerProfileView(TemplateView):

@@ -67,3 +67,11 @@ class Administrator(models.Model):
     def __str__(self):
         return self.full_name
 
+class Facility(models.Model):
+    admin = models.OneToOneField(Administrator, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField('Name', max_length=50, null=False, blank=False)
+    website_url = models.CharField('Website URL', max_length=150, null=False, blank=False)
+    taxID = models.CharField('Tax ID Number', max_length=50, null=False, blank=False)
+
+    def __str__(self):
+        return self.name
