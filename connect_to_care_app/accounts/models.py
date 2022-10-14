@@ -1,4 +1,5 @@
 from enum import unique
+from xmlrpc.client import Boolean
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -42,6 +43,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def get_id(self):
+        return self.id
+
+    def get_self(self):
+        return self
         
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
@@ -55,7 +62,16 @@ class Administrator(models.Model):
     full_name = models.CharField('Full Name', max_length=100, null=False, blank=False)
     address = models.CharField('Address', max_length=255, null=False, blank=False)
     phone_number = PhoneNumberField(null=False, blank=False, unique=True)
+    facility_enrolled = models.BooleanField(default=False)
 
     def __str__(self):
-        print(self.phone_number)
+        return self.full_name
 
+class Facility(models.Model):
+    admin = models.OneToOneField(Administrator, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField('Name', max_length=50, null=False, blank=False)
+    website_url = models.CharField('Website URL', max_length=150, null=False, blank=False)
+    taxID = models.CharField('Tax ID Number', max_length=50, null=False, blank=False)
+
+    def __str__(self):
+        return self.name

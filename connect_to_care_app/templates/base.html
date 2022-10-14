@@ -12,23 +12,6 @@
     <div class="container my-4">
       
         Connect To Care
-        {% if user.is_authenticated %}
-        {% if user.is_teacher %}
-            <span class="icon-feather" data-toggle="tooltip" data-placement="right" title="Teacher profile"></span>
-        {% else %}
-            <span class="icon-graduation-cap" data-toggle="tooltip" data-placement="right" title="Student profile"></span>
-        {% endif %}
-        {% endif %}
-
-          
-        {% for message in messages %}
-        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        {% endfor %}
         {% block content %}
         {% endblock %}
            
