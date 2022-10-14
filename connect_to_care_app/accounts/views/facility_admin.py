@@ -41,7 +41,6 @@ class AdministratorCredentialsView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        print('here')
         return redirect('home')
 
 @method_decorator([login_required, administrator_required], name='dispatch')
@@ -56,7 +55,6 @@ class AdministratorFacilityFormView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        print('here')
         return redirect('home')
 
 @administrator_required
@@ -73,7 +71,7 @@ def admin_credentials(request):
         user.has_credentials = True
         user.save()
         return redirect('home')
-        
+
 @administrator_required
 def facility_create(request):
     if request.method == 'POST':

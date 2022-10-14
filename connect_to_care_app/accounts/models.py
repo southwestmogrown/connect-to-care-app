@@ -75,3 +75,28 @@ class Facility(models.Model):
 
     def __str__(self):
         return self.name
+
+class Seeker(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    full_name = models.CharField('Full Name', max_length=50, null=False, blank=False)
+    birth_date = models.DateField('Birth Date', null=False)
+    ssn = models.CharField('SSN', max_length=50, null=False, blank=False)
+    title = models.CharField('Title', max_length=50, null=False, blank=False)
+    specialty = models.TextField('Specialty', max_length=50, null=False, blank=False)
+    phone_number = PhoneNumberField('Phone Number', null=False, blank=False)
+    address = models.CharField('Address', max_length=100, null=False, blank=False)
+    has_been_disqualified = models.BooleanField("Have you ever been placed on the disqualified employees Registry?", default=False)
+    has_been_terminated = models.BooleanField("Have you ever had you're employment terminated?", default=False)
+    verified = models.BooleanField('Verified', default=False)
+
+
+    def __str__(self):
+        return self.full_name
+
+class SeekerEmploymentVerifications(models.Model):
+    seeker = models.OneToOneField(Seeker, on_delete=models.CASCADE, primary_key=True)
+    photo_URL = models.URLField('Photo URL', max_length=255, null=False, blank=False)
+    resume_URL = models.URLField('Resume URL', max_length=255, null=False, blank=False)
+    tb_verification_URL = models.URLField('TB Verification', max_length=255, null=False, blank=False)
+    flu_verification_URL = models.URLField('Flu Verification', max_length=255, null=False, blank=False)
+    covid_verification_URL = models.URLField('COVID 19 Verification', max_length=255, null=False, blank=False)
