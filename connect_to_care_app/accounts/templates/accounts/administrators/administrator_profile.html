@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrator Profile</title>
+    <title>{% block title %}Administrator Profile{% endblock %}</title>
 </head>
+{% block content %}
 <body>
     {% if user.has_credentials %}
     {% if user.administrator.facility_enrolled %}
     <h1>Administrator Profile Page</h1>
     <h2>You've Successfully Signed Up As An Admin!</h2>
+    <a href="{% url 'administrators:shift_posts' pk=user.id %}">Add A Shift</a>
     {% else %}
     <h1>One Last Step</h1>
     <h2>Please click <a href="{% url 'administrators:facility' %}">here</a> tell us about your facility</h2>
@@ -27,4 +29,5 @@
     <div>
     </div>
 </body>
+{% endblock %}
 </html>

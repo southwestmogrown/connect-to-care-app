@@ -1,7 +1,7 @@
 from django.urls import include, path
 
 
-from .views import accounts, job_seeker, facility_admin
+from .views import accounts, job_seeker, facility_admin, shift_post
 
 
 urlpatterns = [
@@ -19,5 +19,8 @@ urlpatterns = [
         path('admin_credentials/', facility_admin.AdministratorCredentialsView.as_view(), name='admin_credentials' ),
         path('facility/', facility_admin.AdministratorFacilityFormView.as_view(), name='facility' ),
         path('facilities/', facility_admin.facility_create, name='facility_create'),
+        path('<int:pk>/shift_posts/', shift_post.ShiftPostFormView.as_view(), name='shift_posts'),
+        path('shift_posts/', shift_post.create_post, name='shift_posts')
+
     ], 'accounts'), namespace='administrators'))
 ]

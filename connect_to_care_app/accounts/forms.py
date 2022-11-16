@@ -2,7 +2,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db import transaction
 
-from .models import Administrator, Facility, Seeker, SeekerEmploymentVerifications, User
+from djmoney.models.fields import MoneyField
+from django.db import models
+
+from .models import Administrator, Facility, Seeker, SeekerEmploymentVerifications, User, ShiftPost
 
 class AdministratorSignUpForm(UserCreationForm):
     class Meta:
@@ -48,3 +51,30 @@ class EligibilityForm(forms.ModelForm):
         model = SeekerEmploymentVerifications
         fields = ['photo_URL', 'resume_URL', 'tb_verification_URL', 'flu_verification_URL', 'covid_verification_URL']
 
+class XYZ_DateInput(forms.DateInput):
+    input_type = "date"
+    def __init__(self, **kwargs):
+        kwargs["format"] = "%Y-%m-%d"
+        # kwargs["format"] = "%d-%m-%Y"
+        super().__init__(**kwargs)
+
+class XYZ_DateTimeInput(forms.TimeInput):
+    input_type = "time"
+    #input_type = "datetime"
+    def __init__(self, **kwargs):
+        kwargs["format"] = "T%H:%M"
+        super().__init__(**kwargs)
+
+
+class ShiftPostForm(forms.ModelForm):
+    class Meta:
+        model = ShiftPost
+        fields = ['posted_by', 'facility', 'department', 'position', 'special_qualifications', 'start_date', 'end_date', 'shift_start', 'shift_end', 'rate_of_pay']
+        widgets = {
+            'start_date': XYZ_DateInput(format=["%y-%m-%d"]),
+            'end_date': XYZ_DateInput(format=["%y-%m-%d"]),
+            'shift_start': XYZ_DateTimeInput(format=["T%H:%M"]),
+            'shift_end': XYZ_DateTimeInput(format=["T%H:%M"]),
+            
+        }
+    
