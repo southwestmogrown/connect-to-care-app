@@ -9,7 +9,7 @@ from django.views.generic import CreateView, TemplateView
 
 from ..decorators import administrator_required, seeker_required
 from ..forms import AdministratorSignUpForm, AdministratorCredentialsForm, FacilityForm
-from ..models import Administrator, User, Facility
+from ..models import Administrator, User, Facility, ShiftPost
 
 class AdministratorSignUpView(CreateView):
     model = User
@@ -28,6 +28,11 @@ class AdministratorSignUpView(CreateView):
 @method_decorator([login_required, administrator_required], name='dispatch')
 class AdministratorProfileView(TemplateView):
     template_name = 'accounts/administrators/administrator_profile.html'
+
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shift_posts'] = ShiftPost.objects.all()
+        return context
 
 @method_decorator([login_required, administrator_required], name='dispatch')
 class AdministratorCredentialsView(CreateView):

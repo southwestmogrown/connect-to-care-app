@@ -10,6 +10,10 @@
 <body>
     {% if user.has_credentials %}
     {% if user.administrator.facility_enrolled %}
+    {% for shift_post in shift_posts %}
+    <li>{{shift_post.position}}</li>
+    <li>{{shift_post.facility}}</li>
+    {% endfor %}
     <h1>Administrator Profile Page</h1>
     <h2>You've Successfully Signed Up As An Admin!</h2>
     <a href="{% url 'administrators:shift_posts' pk=user.id %}">Add A Shift</a>

@@ -51,5 +51,6 @@ def create_post(request):
             shift_end=shift_end,
             rate_of_pay=rate_of_pay
             )
-        
-        return redirect('home')
+        shift_posts = ShiftPost.objects.all()
+        context = { "shift_posts":shift_posts }
+        return redirect('/administrators/%s' %(posted_by),  context)
