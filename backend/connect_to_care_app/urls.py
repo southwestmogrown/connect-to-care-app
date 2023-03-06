@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from accounts.views import facility_admin, job_seeker, accounts
+from core.views import front
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
+    # path('', include('accounts.urls')),
+    path('', front, name='front'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup', accounts.SignUpView.as_view(), name='signup'),
     path('accounts/signup/seeker', job_seeker.SeekerSignUpView.as_view(), name='seeker_signup'),
