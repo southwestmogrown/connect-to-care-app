@@ -31,7 +31,7 @@ class AdministratorProfileView(TemplateView):
 
     def get_context_data(self,*args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['shift_posts'] = ShiftPost.objects.all()
+        context['shift_posts'] = ShiftPost.objects.filter(posted_by=context['pk'])
         return context
 
 @method_decorator([login_required, administrator_required], name='dispatch')

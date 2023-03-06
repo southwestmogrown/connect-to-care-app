@@ -6,7 +6,7 @@ from django.views.generic import CreateView, TemplateView
 
 from ..decorators import seeker_required
 from ..forms import EligibilityForm, JobSeekerSignUpForm, SeekersCredentialsForm
-from ..models import Seeker, User, SeekerEmploymentVerifications
+from ..models import Seeker, User, SeekerEmploymentVerifications, ShiftPost
 
 class SeekerSignUpView(CreateView):
     model = User
@@ -25,6 +25,11 @@ class SeekerSignUpView(CreateView):
 @method_decorator([login_required, seeker_required], name='dispatch')
 class SeekerProfileView(TemplateView):
     template_name = 'accounts/seekers/seeker_profile.html'
+
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['shift_posts'] = ShiftPost.objects.all()
+        return context
 
 @method_decorator([login_required, seeker_required], name='dispatch')
 class SeekerCredentialsView(CreateView):

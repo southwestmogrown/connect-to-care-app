@@ -10,6 +10,10 @@
     {% if user.has_credentials %}
     {% if user.seeker.verified %}
     <h1>Seeker Profile Page</h1>
+    {% for shift_post in shift_posts %}
+    <li>{{shift_post.position}}</li>
+    <li>{{shift_post.facility}}</li>
+    {% endfor %}
     <div>
         <p><a href="{% url 'logout' %}">Log Out</a></p>
     </div>
