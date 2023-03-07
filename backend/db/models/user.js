@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     
     toSafeObject() {
-      const {id, userTypeId, userName, email } = this;
-      return { id, userTypeId, userName, email}
+      const {id, userTypeId, userName, email, firstName, lastName } = this;
+      return { id, userTypeId, userName, email, firstName, lastName };
     }
 
     validatePassword(password) {
@@ -38,13 +38,15 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    static async signup({ userTypeId, userName, email, password, }) {
+    static async signup({ userTypeId, userName, email, password, firstName, lastName }) {
 
       const hashedPassword = bcrypt.hashSync(password);
 
       const user = await User.create({
         userTypeId,
         userName,
+        firstName,
+        lastName,
         email,
         hashedPassword
       });
@@ -53,7 +55,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
-      // define association here
+      User.belongsTo(
+        models.UserType,
+      )
     }
   }
   User.init({
@@ -63,6 +67,30 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: [4,30],
+        isNotEmail(value) {
+          if (Validator.isEmail(value)) {
+            throw new Error('Cannot be an email.');
+          }
+        }
+      }
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1,30],
+        isNotEmail(value) {
+          if (Validator.isEmail(value)) {
+            throw new Error('Cannot be an email.');
+          }
+        }
+      }
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1,50],
         isNotEmail(value) {
           if (Validator.isEmail(value)) {
             throw new Error('Cannot be an email.');
@@ -91,12 +119,12 @@ module.exports = (sequelize, DataTypes) => {
     modelName: "User",
     defaultScope: {
       attributes: {
-        exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
+        exclude: ["hashedPassword", "email", "createdAt", "updatedAt", "firstName", "lastName"]
       }
     },
     scopes: {
       currentUser: {
-        attributes: { exclude: ["hashedPassword", "email"] }
+        attributes: { exclude: ["hashedPassword", "email", "firstName", "lastName"] }
       },
       loginUser: {
         attributes: {}
