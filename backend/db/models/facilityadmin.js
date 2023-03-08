@@ -21,13 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         len: [4,30],
       }
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [4,30],
-      }
-    },
     address: {
       type: DataTypes.STRING,
       allowNull: false,
