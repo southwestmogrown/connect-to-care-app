@@ -57,6 +57,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.belongsTo(models.UserType);
       User.hasOne(models.FacilityAdmin);
+      User.hasOne(models.JobSeeker);
     }
   }
   User.init({
