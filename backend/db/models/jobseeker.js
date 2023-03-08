@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       JobSeeker.belongsTo(models.User);
+      JobSeeker.hasOne(models.Credential);
     }
   }
   JobSeeker.init({
