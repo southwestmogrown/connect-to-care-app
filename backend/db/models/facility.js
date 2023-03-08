@@ -3,46 +3,45 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class FacilityAdmin extends Model {
+  class Facility extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      FacilityAdmin.belongsTo(models.User);
-      FacilityAdmin.hasOne(models.Facility);
+      Facility.belongsTo(models.FacilityAdmin)
     }
   }
-  FacilityAdmin.init({
-    userId: { 
+  Facility.init({
+    adminId: { 
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    position: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4,30],
+        len: [2,30],
       }
     },
-    address: {
+    website: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4,255],
+        len: [2,100],
       }
     },
-    phoneNumber: {
+    taxId: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [10,13],
+        len: [4,50],
       }
     },
   }, {
     sequelize,
-    modelName: 'FacilityAdmin',
+    modelName: 'Facility',
   });
-  return FacilityAdmin;
+  return Facility;
 };
