@@ -3,19 +3,17 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-   await queryInterface.bulkInsert('PostActivities', [
+   await queryInterface.bulkInsert('UserTypes', [
     {
-      userId: 1,
-      postId: 3
+      name: 'Job Seeker',
     },
     {
-      userId: 2,
-      postId: 3
+      name: "Facility Administrator"
     }
-  ], {});
+    ], {});
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('PostActivities', null, {});
+    await queryInterface.bulkDelete('UserTypes', null, {});
   }
 };

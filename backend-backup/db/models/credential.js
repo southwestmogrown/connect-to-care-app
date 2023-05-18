@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Credential extends Model {
     static associate(models) {
       // define association here
-      Credential.belongsTo(models.JobSeeker);
+      Credential.belongsTo(models.JobSeeker, { foreignKey: 'userId' });
     }
   }
   Credential.init({

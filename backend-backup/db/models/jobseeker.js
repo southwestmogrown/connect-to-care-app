@@ -11,8 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      JobSeeker.belongsTo(models.User);
-      JobSeeker.hasOne(models.Credential);
+      JobSeeker.belongsTo(models.User, {foreignKey: 'userId'});
+      JobSeeker.hasOne(models.Credential, { foreignKey: 'userId' });
+      JobSeeker.hasMany(models.PostActivity, { foreignKey: 'userId' });
     }
   }
   JobSeeker.init({

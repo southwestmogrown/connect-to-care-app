@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
     static associate(models) {
       // define association here
-      Post.belongsTo(models.FacilityAdmin);
-      Post.belongsTo(models.Facility);
+      Post.belongsTo(models.FacilityAdmin, { foreignKey: 'userId' });
+      Post.belongsTo(models.Facility, { foreignKey: 'facilityId' });
     }
   }
   Post.init({

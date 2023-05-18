@@ -1,37 +1,22 @@
-const router = require('express').Router();
+const express = require('express')
+const router = express.Router();
+const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
+const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
-const { handleValidationErrors } = require('../../utils/validation');
 
 const validateSignup = [
-    check('userTypeId')
-        .exists({ checkFalsy: true })
-        .withMessage('Please select an account type'),
-    check('firstName')
-        .exists({ checkFalsy: true })
-        .withMessage('Please provide a first name.'),
-    check('firstName')
-        .not()
-        .isEmail()
-        .withMessage('First name cannot be an email.'),
-    check('lastName')
-        .exists({ checkFalsy: true })
-        .withMessage('Please provide a last name.'),
-    check('lastName')
-        .not()
-        .isEmail()
-        .withMessage('Last name cannot be an email.'),
     check('email')
       .exists({ checkFalsy: true })
       .isEmail()
       .withMessage('Please provide a valid email.'),
-    check('userName')
+    check('username')
       .exists({ checkFalsy: true })
       .isLength({ min: 4 })
       .withMessage('Please provide a username with at least 4 characters.'),
-    check('userName')
+    check('username')
       .not()
       .isEmail()
       .withMessage('Username cannot be an email.'),
@@ -42,17 +27,29 @@ const validateSignup = [
     handleValidationErrors
 ];
 
-router.post('/', validateSignup, async (req, res) => {
-    const { email, password, userName, userTypeId, firstName, lastName } = req.body;
-    const user = await User.signup({ userTypeId, userName, email, password, firstName, lastName });
-
-    await setTokenCookie(res, user);
-
-    return res.json({
-        user: user
-    });
-});
-
-
+router.post(
+    '/',
+    validateSignup,
+    async (req, res) => {
+      const { email, password, username, userTypeId, firstName, lastName } = req.body;
+      const hashedPassword = bcrypt.hashSync(password);
+      const user = await User.create({ email, username, hashedPassword, userTypeId, firstName, lastName });
+  
+      const safeUser = {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        userTypeId: user.userTypeId,
+        firstName: user.firstName,
+        lastName: user.lastName
+      };
+  
+      await setTokenCookie(res, safeUser);
+  
+      return res.json({
+        user: safeUser
+      });
+    }
+);
 
 module.exports = router;

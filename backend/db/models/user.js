@@ -1,75 +1,28 @@
 'use strict';
-const bcrypt = require('bcryptjs');
-
 const {
   Model,
   Validator
 } = require('sequelize');
-
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     
-    toSafeObject() {
-      const {id, userTypeId, userName, email, firstName, lastName } = this;
-      return { id, userTypeId, userName, email, firstName, lastName };
-    }
-
-    validatePassword(password) {
-      return bcrypt.compareSync(password, this.hashedPassword.toString());
-    }
-
-    static getCurrentUserById(id) {
-      return User.scope("currentUser").findByPk(id);
-    }
-
-    static async login({ credential, password }) {
-      const { Op } = require('sequelize');
-      const user = await User.scope('loginUser').findOne({
-        where: {
-          [Op.or]: {
-            userName: credential,
-            email: credential
-          }
-        }
-      });
-
-      if (user && user.validatePassword(password)) {
-        return await User.scope('currentUser').findByPk(user.id);
-      }
-    }
-
-    static async signup({ userTypeId, userName, email, password, firstName, lastName }) {
-
-      const hashedPassword = bcrypt.hashSync(password);
-
-      const user = await User.create({
-        userTypeId,
-        userName,
-        firstName,
-        lastName,
-        email,
-        hashedPassword
-      });
-
-      return await User.scope('currentUser').findByPk(user.id);
-    }
-
     static associate(models) {
-      User.belongsTo(models.UserType);
-      User.hasOne(models.FacilityAdmin);
-      User.hasOne(models.JobSeeker);
+      User.belongsTo(models.UserType, { foreignKey: 'userTypeId' });
     }
   }
   User.init({
-    userTypeId: DataTypes.INTEGER,
-    userName: {
+    userTypeId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4,30],
+        len: [4, 30],
         isNotEmail(value) {
           if (Validator.isEmail(value)) {
-            throw new Error('Cannot be an email.');
+            throw new Error("Cannot be an email.");
           }
         }
       }
@@ -113,24 +66,14 @@ module.exports = (sequelize, DataTypes) => {
         len: [60, 60]
       }
     }
-  }, 
-  {
+  }, {
     sequelize,
-    modelName: "User",
+    modelName: 'User',
     defaultScope: {
       attributes: {
-        exclude: ["hashedPassword", "email", "createdAt", "updatedAt", "firstName", "lastName"]
-      }
-    },
-    scopes: {
-      currentUser: {
-        attributes: { exclude: ["hashedPassword", "email", "firstName", "lastName"] }
-      },
-      loginUser: {
-        attributes: {}
+        exclude: ["hashedPassword", "email", "createdAt", "updatedAt"]
       }
     }
-  }
-  );
+  });
   return User;
 };

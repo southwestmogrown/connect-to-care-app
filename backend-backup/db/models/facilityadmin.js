@@ -3,41 +3,42 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Facility extends Model {
+  class FacilityAdmin extends Model {
     static associate(models) {
-      Facility.belongsTo(models.FacilityAdmin);
-      Facility.hasMany(models.Post);
+      FacilityAdmin.belongsTo(models.User, { foreignKey: 'userId' });
+      FacilityAdmin.hasOne(models.Facility, { foreignKey: 'adminId' });
+      FacilityAdmin.hasMany(models.Post, { foreignKey: 'userId' });
     }
   }
-  Facility.init({
-    adminId: { 
+  FacilityAdmin.init({
+    userId: { 
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    name: {
+    position: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [2,30],
+        len: [4,30],
       }
     },
-    website: {
+    address: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [2,100],
+        len: [4,255],
       }
     },
-    taxId: {
+    phoneNumber: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4,50],
+        len: [10,13],
       }
     },
   }, {
     sequelize,
-    modelName: 'Facility',
+    modelName: 'FacilityAdmin',
   });
-  return Facility;
+  return FacilityAdmin;
 };
