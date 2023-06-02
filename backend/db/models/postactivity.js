@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       PostActivity.belongsTo(models.JobSeeker, { foreignKey: 'userId' });
-      PostActivity.belongsTo(models.Post, { foreignKey: 'postId' });
+      PostActivity.belongsTo(models.Post, {
+        foreignKey: 'postId',
+      });
     }
   }
   PostActivity.init(

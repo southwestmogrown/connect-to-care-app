@@ -6,6 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Post.belongsTo(models.FacilityAdmin, { foreignKey: 'userId' });
       Post.belongsTo(models.Facility, { foreignKey: 'facilityId' });
+      Post.hasMany(models.PostActivity, {
+        foreignKey: 'postId',
+      });
     }
   }
   Post.init(
